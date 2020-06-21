@@ -3,6 +3,10 @@ import pygame.font
 from diamondquest.view.window import Window, View
 from functools import reduce
 from random import randint
+from diamondquest.common.mode import ModeType
+from diamondquest.common.loader import load_font
+from diamondquest.common import color
+
 
 """ Deals with MathView
 """
@@ -11,15 +15,26 @@ from random import randint
 
 
 class PuzzleView:
-    def draw_puzzle(self, problem):
 
-        font = pygame.font.Font(
-            "../assets/fonts/cascadia-code/Cascadia.ttf", 60
-        ) # TODO
-        rendered_problem = font.render(problem, True, (0, 0, 255))
+    @classmethod
+    def update(cls):
+        # Load latest view
+        cls.view = Window.get_view(ModeType.PUZZLE)
+        #cls.view.surface.fill(color.BLACK)
+        #Window._draw_shadow()
+
+        rendered_problem = cls.draw_puzzle()
         problem_display_area = rendered_problem.get_rect()
-        problem_display_area.center = ()
+        cls.view.blit(rendered_problem, problem_display_area)
 
+    @classmethod
+    def draw_puzzle(cls):
+        pygame.font.init()
+        font = load_font("Cascadia" , 60 )
+        problem, answer = cls.puzzle_string(2,2,2)
+        rendered_problem = font.render(problem, True, color.WHITE)
+        
+        return rendered_problem
         # surface = Window.get_surface(Views.MATH)
 
         # Get Transparent Background
@@ -28,8 +43,8 @@ class PuzzleView:
 
         # surface.blit(rendered_problem, problem_display_area)
         # Window.redraw_window()
-
-    def depth_range(self, depth):
+    @classmethod
+    def depth_range(cls, depth):
         # defines range of numbers based on depth
         # increases the range with increasing depth
         if 0 <= depth <= 7:
@@ -49,7 +64,8 @@ class PuzzleView:
         elif 56 <= depth <= 63:
             return randint(100001, 200000)
 
-    def depth_numberofterms(self, depth):
+    @classmethod
+    def depth_numberofterms(cls, depth):
         # defines range of numbers based on depth
         # increases the range with increasing depth
         if 0 <= depth <= 7:
@@ -69,10 +85,11 @@ class PuzzleView:
         elif 56 <= depth <= 63:
             return 5
 
-    def power_level_operators(self, powerlevel, numberofterms, depth):
+    @classmethod
+    def power_level_operators(cls, powerlevel, numberofterms, depth):
         listofNumbers = list()
         for i in range(numberofterms):
-            i = self.depth_range(depth)
+            i = cls.depth_range(depth)
             listofNumbers.append(i)
         if powerlevel == 1:
             answer = sum(listofNumbers)
@@ -94,25 +111,27 @@ class PuzzleView:
             pass
         elif powerlevel == 8:
             pass
-
-    def tool_difficulty(self, tool, powerlevel, depth):
+    
+    @classmethod
+    def tool_difficulty(cls, tool, powerlevel, depth):
         # Pickaxe two terms one operator
         # drill multiple terms one operator
         # tnt multiple terms multiple operator
         # operators depend on power level
         if tool == "pickaxe":
             numberofterms = 2
-            self.power_level_operators(powerlevel, numberofterms, depth)
+            cls.power_level_operators(powerlevel, numberofterms, depth)
         elif tool == "drill":
-            numberofterms = self.depth_numberofterms(depth)
-            self.power_level_operators(powerlevel, numberofterms, depth)
+            numberofterms = cls.depth_numberofterms(depth)
+            cls.power_level_operators(powerlevel, numberofterms, depth)
         elif tool == "tnt":
             pass
-
-    def puzzle_string(self, powerlevel, numberofterms, depth):
+    
+    @classmethod
+    def puzzle_string(cls, powerlevel, numberofterms, depth):
         # Convert list of Numbers to String and add Operators
         # return it to pygame fonts to render on screen
-        listofNumbers, answer, operator = self.power_level_operators(
+        listofNumbers, answer, operator = cls.power_level_operators(
             powerlevel, numberofterms, depth
         )
         listofString = [str(number) for number in listofNumbers]
@@ -128,13 +147,15 @@ class PuzzleView:
         # implement scorer
         return puzzleString, answer
 
-    def player_input(self):
+    @classmethod
+    def player_input(cls):
         playerInput = input("Enter Answer")
         print("Answer" + playerInput)
         return int(playerInput)
 
-    def scorer(self, answer, score):
-        check_answer = self.answer_check(self.player_input(), answer)
+    @classmethod
+    def scorer(cls, answer, score):
+        check_answer = cls.answer_check(cls.player_input(), answer)
         if check_answer == True:
             score = score + 1
             # level or points increase
@@ -145,7 +166,8 @@ class PuzzleView:
             pass
         return score
 
-    def answer_check(self, userresponse, correctanswer):
+    @classmethod
+    def answer_check(cls, userresponse, correctanswer):
         # Returns a bool
         # Increase level for true
         # Display Incorrect for false
@@ -154,7 +176,8 @@ class PuzzleView:
         else:
             return False
 
-    def bubble_puzzles(self, spectrum):
+    @classmethod
+    def bubble_puzzles(cls, spectrum):
         # Future Task: Deals with in game Maths Puzzles with bubbles.
         # This can also use puzzle generator with changing spectrum
         pass

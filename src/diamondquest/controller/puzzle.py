@@ -1,9 +1,9 @@
 """
-JournalController [DiamondQuest]
+MenuController [DiamondQuest]
 
-Controller for Journal.
+Controller for Menu.
 
-Author(s): Harley Davis, Jason C. McDonald
+Author(s): Graham Mix, Muhammad Adeel Hussain
 """
 
 # LICENSE (BSD-3-Clause)
@@ -48,29 +48,13 @@ from diamondquest.common.mode import ModeType
 from diamondquest.view.window import Window
 
 
-class JournalController:
+class PuzzleController:
     @staticmethod
     def process_action():
-        if GameModel.mode == ModeType.JOURNAL:
+        if GameModel.mode == ModeType.PUZZLE:
             if KeyboardController.pending():
                 action = KeyboardController.grab()
 
-                # Resume Game
-                if action == KEYS.K_j:
-                    GameModel.mode = ModeType.MAP
-                    Window.hide_view(ModeType.JOURNAL)
-
                 if action == KEYS.K_p:
-                    GameModel.mode = ModeType.PUZZLE
-                    Window.show_view(ModeType.PUZZLE)
-
-                # Handling arrows here
-                # They are put back in front in case arrows are held down
-                elif action == KEYS.K_UP:
-                    KeyboardController.restore(action)
-                elif action == KEYS.K_DOWN:
-                    KeyboardController.restore(action)
-                elif action == KEYS.K_LEFT:
-                    KeyboardController.restore(action)
-                elif action == KEYS.K_RIGHT:
-                    KeyboardController.restore(action)
+                    GameModel.mode = ModeType.MAP
+                    Window.hide_view(ModeType.PUZZLE)

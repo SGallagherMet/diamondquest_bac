@@ -1,4 +1,4 @@
 {
-    "python.pythonPath": "./venv/bin/python3.7", // DO NOT CHANGE ME!
+    "python.pythonPath": "venv/bin/python", // DO NOT CHANGE ME!
     "cSpell.words": ["pygame"]
 }

@@ -10,6 +10,7 @@ from diamondquest.controller import (  # noqa: E402
     MenuController,
     PlayerController,
     JournalController,
+    PuzzleController,
 )
 
 from diamondquest.common.constants import FPS  # noqa: E402
@@ -73,6 +74,7 @@ def update_controllers():
     MenuController.process_action()
     PlayerController.process_action()
     JournalController.process_action()
+    PuzzleController.process_action()
 
 
 # Called the right update_view depending on state.
@@ -80,6 +82,7 @@ def update_views():
     MapView.update()
     MenuView.update()
     JournalView.update()
+    PuzzleView.update()
 
 
 if __name__ == "__main__":
