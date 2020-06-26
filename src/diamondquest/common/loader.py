@@ -80,3 +80,4 @@ def load_texture(texture, subfolder="textures"):
                 img
             ).convert_alpha()
     return surface
+

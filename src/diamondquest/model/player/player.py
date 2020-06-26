@@ -40,18 +40,9 @@ Author(s): Elizabeth Larson, Jason C. McDonald
 # See https://www.mousepawmedia.com/developers for information
 # on how to contribute to our projects.
 
-from enum import Enum
-
 from diamondquest.common import constants
-from diamondquest.common import Direction
+from diamondquest.common import Direction, ToolType
 from diamondquest.model.map import MapModel
-from diamondquest.model.player import ToolType
-
-
-class PlayerAction(Enum):
-    IDLE = 0
-    MOVE = 1
-    TOOL = 2
 
 
 class PlayerModel:
@@ -69,10 +60,10 @@ class PlayerModel:
 
         self._locality = MapModel.get_locality(self._location)
         self._anchor = Direction.BELOW
-        self.action = PlayerAction.IDLE
 
-        self.tool = ToolType.HAND
-        self._power = 1
+        self._tool = ToolType.NONE
+        self._direction = Direction.HERE  # Idle = Direction.HERE
+
         self.coffee = False
 
     def reorient(self):
@@ -82,10 +73,10 @@ class PlayerModel:
         self._locality = MapModel.get_locality(self._location)
         if self._locality.can_stand():
             self._anchor = Direction.BELOW
-            self.action = PlayerAction.IDLE
+            self._direction = Direction.HERE
         elif self._locality.can_climb():
             self._anchor = Direction.HERE
-            self.action = PlayerAction.IDLE
+            self._direction = Direction.HERE
 
     @property
     def anchor(self):
@@ -109,12 +100,12 @@ class PlayerModel:
             self.reorient()
             return True
         return False
-'''
-    @property.getter
+
+    @property
     def power(self):
         return self._power
 
-    @property.setter
+    @power.setter
     def power(self, power):
         """Set the power level between 1 and 8 inclusively."""
         if power < 1:
@@ -122,9 +113,13 @@ class PlayerModel:
         else:
             self._power = min(power, constants.MAX_POWER_LEVEL)
 
-
-
     @property
     def location(self):
         return self._location
-'''
+
+    @property
+    def action(self):
+        """ Returns Anchor Tool, Work Direction"""
+        return (self._anchor, self._tool, self._direction)
+
+

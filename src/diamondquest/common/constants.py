@@ -44,6 +44,9 @@ FPS = 16
 # The number of pixels in a single "block" in the source textures.
 TEXTURE_RES = 16
 
+# The maximum step index for sprite animations
+STEP_MAX = 1
+
 # The number of blocks from top to bottom of screen
 BLOCK_COUNT = 8
 
